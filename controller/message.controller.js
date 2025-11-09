@@ -1,6 +1,5 @@
 import { messageModel } from '../models/message.model.js'
 import { conversationModel } from '../models/conversation.model.js'
-import { userModel } from "../models/user.model.js";
 
 import { asyncHandler } from "../utilities/asyncHandler.utility.js";
 import { errorHandler } from "../utilities/errorHandler.utility.js";
@@ -38,8 +37,8 @@ export const sendMessage = asyncHandler( async(req,res,next)=> {
       await conversationModel.findByIdAndUpdate(
   conversation._id,
   { 
-    $push: { messages: newMessage._id }
-    // force-update timestamp
+    $push: { messages: newMessage._id },
+  // force-update timestamp
   }
 );
 
@@ -47,9 +46,8 @@ export const sendMessage = asyncHandler( async(req,res,next)=> {
 const socketId = getSocketId(receiversId) ;
 
 console.log("msg : ",newMessage);
-    
 
-    io.to(socketId).emit("message" , newMessage) ;
+    io.to(socketId).emit("message" , newMessage ) ;
 
     //////socket.io /////////
 
@@ -101,4 +99,3 @@ const messages = await messageModel.find({
 
 
 ///get messages
-
