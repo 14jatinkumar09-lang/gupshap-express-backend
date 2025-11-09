@@ -46,8 +46,14 @@ export const sendMessage = asyncHandler( async(req,res,next)=> {
 const socketId = getSocketId(receiversId) ;
 
 console.log("msg : ",newMessage);
+    const sender =  await userModel.findOne({_id : newMessage.senderId}) ;
+    if(!sender) {
+        return next(new errorHandler("server error " , 400)) ;
+    }
 
-    io.to(socketId).emit("message" , newMessage ) ;
+    io.to(socketId).emit("message" , {
+        message , sender
+    }) ;
 
     //////socket.io /////////
 
