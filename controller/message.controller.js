@@ -38,8 +38,8 @@ export const sendMessage = asyncHandler( async(req,res,next)=> {
       await conversationModel.findByIdAndUpdate(
   conversation._id,
   { 
-    $push: { messages: newMessage._id },
-    updatedAt: new Date() // force-update timestamp
+    $push: { messages: newMessage._id }
+    // force-update timestamp
   }
 );
 
@@ -53,7 +53,7 @@ console.log("msg : ",newMessage);
     }
 
     io.to(socketId).emit("message" , {
-        message , sender
+        message : newMessage , sender
     }) ;
 
     //////socket.io /////////
@@ -92,7 +92,7 @@ const messages = await messageModel.find({
 
 
     res.status(200).json({
-        success  : false ,
+        success  : true ,
         responseData : {
             messages ,
         }
