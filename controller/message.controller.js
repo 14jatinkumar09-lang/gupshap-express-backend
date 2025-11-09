@@ -1,5 +1,6 @@
 import { messageModel } from '../models/message.model.js'
 import { conversationModel } from '../models/conversation.model.js'
+import { userModel } from "../models/user.model.js";
 
 import { asyncHandler } from "../utilities/asyncHandler.utility.js";
 import { errorHandler } from "../utilities/errorHandler.utility.js";
