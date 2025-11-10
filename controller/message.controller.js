@@ -1,6 +1,6 @@
 import { messageModel } from '../models/message.model.js'
 import { conversationModel } from '../models/conversation.model.js'
-
+import { userModel } from '../models/user.model.js'
 import { asyncHandler } from "../utilities/asyncHandler.utility.js";
 import { errorHandler } from "../utilities/errorHandler.utility.js";
 import mongoose from 'mongoose';
@@ -38,16 +38,23 @@ export const sendMessage = asyncHandler( async(req,res,next)=> {
   conversation._id,
   { 
     $push: { messages: newMessage._id },
-  // force-update timestamp
+    updatedAt: new Date() // force-update timestamp
   }
 );
 
+
+const sender = await userModel.findOne({_id : newMessage?.senderId}) ;
+if(!sender) {
+    return ;
+}
 
 const socketId = getSocketId(receiversId) ;
 
 console.log("msg : ",newMessage);
 
-    io.to(socketId).emit("message" , newMessage ) ;
+    io.to(socketId).emit("message" , {newMessage , sender} ) ;
+
+    
 
     //////socket.io /////////
 
@@ -85,7 +92,7 @@ const messages = await messageModel.find({
 
 
     res.status(200).json({
-        success  : true ,
+        success  : false ,
         responseData : {
             messages ,
         }
@@ -99,3 +106,4 @@ const messages = await messageModel.find({
 
 
 ///get messages
+
