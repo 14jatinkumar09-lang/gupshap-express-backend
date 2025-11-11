@@ -80,8 +80,8 @@ export const login = asyncHandler(async (req,res,next)=> {
 
 export const getUser = asyncHandler(async(req,res,next) => {
     let userID = null ;
-    if(req?.body?.selectedUserId) {
-        userID =  req?.body?.selectedUserId ;
+    if(req.body.selectedUserId) {
+        userID =  req.body.selectedUserId ;
     }
     else {
         userID = req._id ;
@@ -140,17 +140,20 @@ export const allOldUsers = asyncHandler(async(req,res,next)=>{
 export const updateUser = asyncHandler(async(req,res,next)=> {
 
     const userId = req._id ;
-    const userDeatils = req.body ; 
+    console.log("userid" , userId);
+    const userDeatils = req.body.data ; 
     if(!userDeatils) {
         return next(new errorHandler("error hai saari details bhej bc", 401)) ;
     }
-    if(userDeatils.userName) {
+    console.log(userDeatils);
+    if(userDeatils?.userName) {
         const exist = userModel.findOne({userName : userDeatils.userName}) ;
         if(exist) {
             return next(new errorHandler(`This'${userDeatils.userName}' is Not Available ` , 402)) ;
         }
     }
-    const update = await userModel.updateOne( {_id : userId} , {$set : userDeatils}) ;
+    const update = await userModel.updateOne( {_id : userId} ,  userDeatils) ;
+    console.log(update);
 
     if(!update) {
         res.status(400).json({
