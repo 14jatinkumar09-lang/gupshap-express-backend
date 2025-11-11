@@ -15,7 +15,8 @@ connectMongoDB() ;
 app.use(express.json()) ;
 app.use(cors({
   origin: process.env.CLIENT_URL,        // your Vercel frontend url
-  credentials: true
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
 ////////////////////////////////////////////////////////////////////////
 const port = process.env.PORT || 5000 ;
